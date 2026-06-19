@@ -15,26 +15,29 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-[#0f0f0f]">
-      
+    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-primary">
       {/* Left — Hamburger + Logo */}
       <div className="flex items-center gap-3">
-        <HiOutlineBars3 className="text-2xl text-white cursor-pointer hover:bg-[#272727] rounded-full p-1 text-4xl" />
+        <button className="icon-btn p-2 rounded-full cursor-pointer">
+          <HiOutlineBars3 className="text-3xl text-primary" />
+        </button>
+
         <div className="flex items-center gap-1 cursor-pointer">
           <SiYoutube className="text-red-600 text-3xl" />
-          <span className="font-medium text-white text-2xl -tracking-[0.07em]">
+
+          <span className="font-medium text-primary text-2xl -tracking-[0.07em]">
             YouTube
           </span>
-          <sup className="text-[10px] font-normal text-white ml-0 -translate-y-1">IN</sup>
+
+          <sup className="text-[10px] text-secondary -translate-y-1">IN</sup>
         </div>
       </div>
 
       {/* Center — Search */}
       <div className="flex items-center w-[40%]">
         <div className="relative w-full">
-          {/* Search icon inside left — only when focused */}
           {isFocused && (
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-white text-lg" />
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg" />
           )}
 
           <input
@@ -44,35 +47,35 @@ const Header = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className={`w-full bg-[#121212] text-white border border-[#303030] rounded-l-full py-2 text-sm outline-none focus:border-blue-500 ${
-              isFocused ? "pl-10 pr-8" : "px-4"
+            className={`search-input h-10 w-full rounded-l-full text-sm outline-none ${
+              isFocused ? "pl-10 pr-10" : "px-4"
             }`}
           />
 
-          {/* Clear icon — only when text is typed */}
           {searchQuery && (
-            <IoCloseOutline
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white text-xl cursor-pointer hover:bg-[#272727] rounded-full"
+            <button
               onClick={handleClear}
-            />
+              className="absolute right-2 top-1/2 -translate-y-1/2 icon-btn p-1 rounded-full"
+            >
+              <IoCloseOutline className="text-primary text-xl" />
+            </button>
           )}
         </div>
 
-        <button className="bg-[#222222] border border-[#303030] border-l-0 rounded-r-full px-5 py-2.5 text-white hover:bg-[#3d3d3d]">
+        <button className="search-btn h-10 text-primary border-theme border-l-0 rounded-r-full px-6 flex items-center justify-center">
           <FiSearch className="text-lg" />
         </button>
       </div>
-
       {/* Right — Create + Sign In */}
       <div className="flex items-center gap-3">
-        <button className="flex items-center gap-2 bg-stone-800 text-white border border-[#303030] rounded-full px-4 py-1.5 text-sm hover:bg-stone-700">
+        <button className="create-btn text-primary border-theme rounded-full px-4 py-1.5 text-sm flex items-center gap-2 cursor-pointer">
           <FaPlus className="text-sm" />
           Create
         </button>
+
         <SignInBtn />
       </div>
-
-    </div>
+    </header>
   );
 };
 

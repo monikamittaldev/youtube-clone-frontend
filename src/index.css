@@ -1,1 +1,145 @@
 @import "tailwindcss";
+
+/* =========================
+   Theme Variables
+========================= */
+
+:root {
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #212121;
+  --bg-hover: #272727;
+  --bg-input: #121212;
+
+  --border-color: #303030;
+
+  --text-primary: #f1f1f1;
+  --text-secondary: #aaaaaa;
+  --text-muted: #717171;
+
+  --search-btn-bg: #222222;
+  --search-btn-hover: #3d3d3d;
+
+  --signin-text: #3ea6ff;
+  --signin-hover: #263850;
+
+  --create-btn-bg: #272727;
+  --create-btn-hover: #3f3f3f;
+}
+
+:root.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f2f2f2;
+  --bg-hover: #e5e5e5;
+  --bg-input: #ffffff;
+
+  --border-color: #d3d3d3;
+
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --text-muted: #909090;
+
+  --search-btn-bg: #f8f8f8;
+  --search-btn-hover: #e5e5e5;
+
+  --signin-text: #065fd4;
+  --signin-hover: #def1ff;
+
+  --create-btn-bg: #f2f2f2;
+  --create-btn-hover: #e5e5e5;
+}
+
+/* =========================
+   Global
+========================= */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* =========================
+   Theme Utilities
+========================= */
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-input {
+  background-color: var(--bg-input);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.border-theme {
+  border: 1px solid var(--border-color);
+}
+
+/* =========================
+   Hover Utilities
+========================= */
+
+.search-input {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.search-input:focus {
+  border-color: #3ea6ff;
+  box-shadow: 0 0 0 1px #3ea6ff;
+}
+
+.icon-btn:hover {
+  background-color: var(--bg-hover);
+}
+
+.search-btn {
+  background-color: var(--search-btn-bg);
+}
+
+.search-btn:hover {
+  background-color: var(--search-btn-hover);
+}
+
+.create-btn {
+  background-color: var(--create-btn-bg);
+}
+
+.create-btn:hover {
+  background-color: var(--create-btn-hover);
+}
+
+.signin-text {
+  color: var(--signin-text);
+}
+
+.signin-btn {
+  color: var(--signin-text);
+}
+
+.signin-btn:hover {
+  background-color: var(--signin-hover);
+}
+
+/* =========================
+   Smooth Animations
+========================= */
+
+button,
+input,
+svg {
+  transition: all 0.2s ease;
+}

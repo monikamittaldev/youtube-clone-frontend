@@ -3,7 +3,12 @@ import Header from "./components/Header/Header";
 
 const App = () => {
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "var(--bg-primary)",
+      }}
+      className="w-screen h-screen"
+    >
       <Header />
     </div>
   );

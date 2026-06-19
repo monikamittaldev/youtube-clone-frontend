@@ -3,11 +3,11 @@ import { FaRegUserCircle } from "react-icons/fa";
 
 const SignInBtn = () => {
   return (
-    <button className="flex items-center gap-2 text-[#3ea6ff] border border-gray-700 rounded-full px-2.5 py-1.5 text-sm font-medium hover:bg-[#263850] transition-colors duration-200">
+    <button className="signin-btn border-theme rounded-full px-3 py-1.5 flex items-center gap-2 font-medium transition-colors duration-200 cursor-pointer">
       <FaRegUserCircle className="text-xl" />
       Sign in
     </button>
   );
 };
 
-export default SignInBtn;
+export default SignInBtn; 
