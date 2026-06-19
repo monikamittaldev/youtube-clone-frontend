@@ -15,7 +15,7 @@ const App = () => {
     >
       <Header setSidebarOpen={setSidebarOpen} />
       <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
-      <Outlet/>
+      <Outlet context={{ sidebarOpen }} />
     </div>
   );
 };
