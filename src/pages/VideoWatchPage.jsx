@@ -32,6 +32,7 @@ const VideoWatchPage = () => {
   // ← set like count in useEffect not in render
   useEffect(() => {
     if (video?._id) {
+      console.log("Video data : ", video.videoUrl);
       setLikeCount(video.likes?.length || 0);
     }
   }, [video?._id]);
@@ -107,20 +108,17 @@ const VideoWatchPage = () => {
   }
 
   return (
-    <div
-      className="pt-16 min-h-screen bg-primary "
-    >
+    <div className="pt-16 min-h-screen bg-primary ">
       <div className="max-w-[1800px] mx-auto px-4 py-4 flex flex-col lg:flex-row gap-6">
         {/* ── Left — Player + Info ── */}
         <div className="flex-1 min-w-0">
           {/* Video Player */}
           <div className="w-full rounded-xl overflow-hidden bg-black aspect-video">
             <ReactPlayer
-              url={video.videoUrl}
+              src={video.videoUrl}
               controls
               width="100%"
               height="100%"
-              light={video.thumbnailUrl}
               playing={false}
             />
           </div>
@@ -146,7 +144,8 @@ const VideoWatchPage = () => {
                   {formatViews(video.views)} views
                 </p>
               </div>
-              <button className="ml-4 bg-primary text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-colors bg-red-600">
+
+              <button className="ml-4 dark:text-stone-950 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-900 transition-colors bg-stone-950 dark:bg-white dark:hover:bg-stone-200">
                 Subscribe
               </button>
             </div>

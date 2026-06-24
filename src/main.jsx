@@ -8,6 +8,7 @@ import App from "./App.jsx";
 import { ThemeProvider } from "./components/Context/ThemeContext.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PageLoader from "./components/PageLoader.jsx";
+import Test from "./pages/Test.jsx";
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
@@ -54,8 +55,8 @@ const appRouter = createBrowserRouter([
     ),
   },
   {
-    path:"/loader",
-    element:<PageLoader/>
+    path:"/test",
+    element:<Test/>
   }
 ]);
 
