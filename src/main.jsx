@@ -8,12 +8,10 @@ import App from "./App.jsx";
 import { ThemeProvider } from "./components/Context/ThemeContext.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PageLoader from "./components/PageLoader.jsx";
-import Test from "./pages/Test.jsx";
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
-const Register = lazy(() => import("./pages/Register.jsx"));
-const SigninPage = lazy(() => import("./pages/SigninPage.jsx"));
 const VideoWatchPage = lazy(() => import("./pages/VideoWatchPage.jsx"));
+const AuthPage = lazy(() => import("./pages/AuthPage"));
 
 const appRouter = createBrowserRouter([
   {
@@ -38,26 +36,9 @@ const appRouter = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/signin",
-    element: (
-      <Suspense fallback={<PageLoader />}>
-        <SigninPage />
-      </Suspense>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <Suspense fallback={<PageLoader />}>
-        <Register />
-      </Suspense>
-    ),
-  },
-  {
-    path:"/test",
-    element:<Test/>
-  }
+  { path: "/auth", element: <Suspense fallback={<PageLoader />}>
+        <AuthPage />
+      </Suspense> },
 ]);
 
 createRoot(document.getElementById("root")).render(

@@ -5,33 +5,32 @@ import {
   MdOutlineMovie,
   MdOutlinePodcasts,
   MdOutlineStream,
+  MdOutlineSchool,
+  MdOutlineManageAccounts,
 } from "react-icons/md";
 import { IoMusicalNotesOutline } from "react-icons/io5";
 import { RiShoppingBag4Line } from "react-icons/ri";
 import { PiGameController } from "react-icons/pi";
 import { GiClothes } from "react-icons/gi";
-import { MdOutlineSchool } from "react-icons/md";
-import SignInBtn from "../Header/SignInBtn";
-import { useLocation } from "react-router-dom";
-import useIsMobile from "../../hooks/useIsMobile";
 import { FaRegUserCircle } from "react-icons/fa";
+import { MdOutlineAddBox } from "react-icons/md";
+import SignInBtn from "../Header/SignInBtn";
+import { useLocation, useNavigate } from "react-router-dom";
+import useIsMobile from "../../hooks/useIsMobile";
 
 const collapsedNavItems = [
-  { icon: <GoHome className="text-2xl" />, label: "Home" },
-  { icon: <SiYoutubeshorts className="text-2xl" />, label: "Shorts" },
-  { icon: <FaRegUserCircle className="text-2xl" />, label: "You" },
+  { icon: <GoHome className="text-2xl" />, label: "Home", path: "/" },
+  { icon: <SiYoutubeshorts className="text-2xl" />, label: "Shorts", path: "/" },
+  { icon: <FaRegUserCircle className="text-2xl" />, label: "You", path: "/auth" },
 ];
 
 const navItems = [
-  { icon: <GoHome className="text-2xl" />, label: "Home" },
-  { icon: <SiYoutubeshorts className="text-2xl" />, label: "Shorts" },
+  { icon: <GoHome className="text-2xl" />, label: "Home", path: "/" },
+  { icon: <SiYoutubeshorts className="text-2xl" />, label: "Shorts", path: "/" },
 ];
 
 const exploreItems = [
-  {
-    icon: <MdOutlineLocalFireDepartment className="text-2xl" />,
-    label: "Trending",
-  },
+  { icon: <MdOutlineLocalFireDepartment className="text-2xl" />, label: "Trending" },
   { icon: <RiShoppingBag4Line className="text-2xl" />, label: "Shopping" },
   { icon: <IoMusicalNotesOutline className="text-2xl" />, label: "Music" },
   { icon: <MdOutlineMovie className="text-2xl" />, label: "Movies" },
@@ -43,10 +42,16 @@ const exploreItems = [
 
 const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
   const isMobile = useIsMobile();
   const showOverlayMode = !isHomePage || isMobile;
-  
+
+  // ── Get user from localStorage ────────────
+  const user = JSON.parse(localStorage.getItem("yt_user") || "null");
+  const isLoggedIn = !!user;
+
+  // ── Collapsed sidebar (Home desktop only) ─
   if (!showOverlayMode && !sidebarOpen) {
     return (
       <aside className="fixed top-14 left-0 h-[calc(100vh-56px)] w-20 bg-primary py-2">
@@ -54,7 +59,8 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
           {collapsedNavItems.map((item) => (
             <button
               key={item.label}
-              className="flex flex-col items-center gap-1 py-3 hover:bg-hover rounded-xl"
+              onClick={() => navigate(item.path)}
+              className="flex flex-col items-center gap-1 py-3 hover:bg-hover rounded-xl w-full"
             >
               {item.icon}
               <span className="text-[10px] text-primary">{item.label}</span>
@@ -67,42 +73,31 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
 
   return (
     <>
+      {/* Overlay for mobile / non-home pages */}
       {showOverlayMode && sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40"
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
       <aside
         className={`
-    fixed
-    top-14
-    left-0
-    h-[calc(100vh-56px)]
-    bg-primary
-    overflow-y-auto
-    scrollbar-hide
-    px-2 py-2
-    z-50
-    transition-all duration-300
-
-    ${
-      showOverlayMode
-        ? `
-          w-60
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        `
-        : `
-          ${sidebarOpen ? "w-60" : "w-20"}
-        `
-    }
-  `}
+          fixed top-14 left-0 h-[calc(100vh-56px)]
+          bg-primary overflow-y-auto scrollbar-hide
+          px-2 py-2 z-50 transition-all duration-300
+          ${showOverlayMode
+            ? `w-60 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`
+            : `${sidebarOpen ? "w-60" : "w-20"}`
+          }
+        `}
       >
         {/* Nav Items */}
         <div className="flex flex-col gap-1">
           {navItems.map((item) => (
             <button
               key={item.label}
+              onClick={() => navigate(item.path)}
               className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left"
             >
               {item.icon}
@@ -113,15 +108,68 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
 
         <hr className="border-[#3f3f3f] my-3" />
 
-        {/* Sign In Box */}
-        <div className="px-3 py-3 flex flex-col gap-3">
-          <p className="text-sm text-secondary leading-snug">
-            Sign in to like videos, comment, and subscribe.
-          </p>
-          <div className="w-fit">
-            <SignInBtn />
+        {/* ── Auth section ── */}
+        {isLoggedIn ? (
+          <div className="flex flex-col gap-1">
+
+            {/* User info */}
+            <div className="flex items-center gap-3 px-3 py-2">
+              <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.username}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  user.username?.[0]?.toUpperCase()
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-primary truncate">
+                  {user.username}
+                </p>
+                <p className="text-xs text-secondary truncate">{user.email}</p>
+              </div>
+            </div>
+
+            {/* Your Channel */}
+            {user.channel ? (
+              <button
+                onClick={() => {
+                  navigate(`/channel/${user.channel}`);
+                  if (showOverlayMode) setSidebarOpen(false);
+                }}
+                className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left"
+              >
+                <MdOutlineManageAccounts className="text-2xl" />
+                <span className="text-sm font-medium">Your Channel</span>
+              </button>
+            ) : (
+              // No channel yet — prompt to create
+              <button
+                onClick={() => {
+                  navigate("/channel/create");
+                  if (showOverlayMode) setSidebarOpen(false);
+                }}
+                className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left"
+              >
+                <MdOutlineAddBox className="text-2xl" />
+                <span className="text-sm font-medium">Create Channel</span>
+              </button>
+            )}
           </div>
-        </div>
+        ) : (
+          // Not logged in — Sign In box
+          <div className="px-3 py-3 flex flex-col gap-3">
+            <p className="text-sm text-secondary leading-snug">
+              Sign in to like videos, comment, and subscribe.
+            </p>
+            <div className="w-fit">
+              <SignInBtn />
+            </div>
+          </div>
+        )}
 
         <hr className="border-[#3f3f3f] my-3" />
 
@@ -140,6 +188,7 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
             </button>
           ))}
         </div>
+
       </aside>
     </>
   );

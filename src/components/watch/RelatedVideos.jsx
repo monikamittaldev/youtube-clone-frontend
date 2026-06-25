@@ -26,7 +26,10 @@ const RelatedVideos = ({ currentVideoId }) => {
   if (loading) return <PageLoader />;
 
   // ✅ filter directly — no useState needed
-  const videos = data?.data?.filter((v) => v._id !== currentVideoId) || [];
+  const videos = (data?.data || [])
+    .filter((v) => v._id !== currentVideoId)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 12);
 
   return (
     <div className="flex flex-col gap-3">
@@ -39,7 +42,10 @@ const RelatedVideos = ({ currentVideoId }) => {
           {/* Thumbnail */}
           <div className="relative w-40 flex-shrink-0 rounded-lg overflow-hidden">
             <img
-              src={video.thumbnailUrl || `https://picsum.photos/seed/${video._id}/160/90`}
+              src={
+                video.thumbnailUrl ||
+                `https://picsum.photos/seed/${video._id}/160/90`
+              }
               alt={video.title}
               className="w-full aspect-video object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
