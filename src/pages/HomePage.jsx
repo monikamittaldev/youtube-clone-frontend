@@ -1,17 +1,29 @@
+import { useState } from "react";
 import VideoCard from "../components/Home/VideoCard";
 import useFetch from "../hooks/useFetch";
 import { useOutletContext } from "react-router-dom";
 import useIsMobile from "../hooks/useIsMobile";
 import VideoCardSkeleton from "../components/Home/VideoCardSkeleton";
+import CategoryPills from "../components/Home/CategoryPills";
+
 const categories = [
   "All",
-  "React",
+  "Web Development",
   "JavaScript",
+  "React",
   "Node.js",
+  "Data Structures",
+  "Python",
+  "CSS",
+  "Database",
+  "DevOps",
+  "Music",
+  "Gaming",
+  "News",
+  "Sports",
   "MongoDB",
   "Express",
   "Tailwind",
-  "Web Development",
   "Programming",
   "Podcasts",
 ];
@@ -19,21 +31,15 @@ const categories = [
 const HomePage = () => {
   const { sidebarOpen } = useOutletContext();
   const isMobile = useIsMobile();
-  const { data, loading, error } = useFetch("http://localhost:5000/api/videos");
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  if (loading) {
-    return (
-      <div className="ml-60 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 6}).map((_, i) => (
-          <VideoCardSkeleton key={i} />
-        ))}
-      </div>
-    );
-  }
+  // ── Build URL based on active category ──────────────────────
+  const apiUrl =
+    activeCategory === "All"
+      ? "http://localhost:5000/api/videos"
+      : `http://localhost:5000/api/videos?category=${encodeURIComponent(activeCategory)}`;
 
-  if (error) {
-    return <div className="pt-20 text-center text-red-500">{error}</div>;
-  }
+  const { data, loading, error } = useFetch(apiUrl);
 
   const videoList = data?.data || [];
 
@@ -43,36 +49,47 @@ const HomePage = () => {
         isMobile ? "ml-0" : sidebarOpen ? "ml-60" : "ml-20"
       }`}
     >
-      {/* Category Pills */}
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide mb-6 pb-2 ">
-        {categories.map((category, index) => (
-          <button
-            key={category}
-            className={`
-              whitespace-nowrap
-              px-3
-              py-1.5
-              rounded-lg
-              text-sm
-              font-medium
-              transition-colors
-              ${
-                index === 0
-                  ? "bg-black text-white"
-                  : "bg-gray-100 hover:bg-gray-200 text-black"
-              }
-            `}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-      {/* Videos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videoList.map((item) => (
-          <VideoCard key={item._id} video={item} />
-        ))}
-      </div>
+      {/* ── Category Pills ───────────────────────────────────── */}
+      <CategoryPills
+        categories={categories}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+      />
+
+      {/* ── Loading ──────────────────────────────────────────── */}
+      {loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <VideoCardSkeleton key={i} />
+          ))}
+        </div>
+      )}
+
+      {/* ── Error ────────────────────────────────────────────── */}
+      {error && !loading && (
+        <div className="pt-20 text-center text-red-500">{error}</div>
+      )}
+
+      {/* ── Empty state ──────────────────────────────────────── */}
+      {!loading && !error && videoList.length === 0 && (
+        <div className="pt-20 text-center text-gray-400 dark:text-gray-500">
+          <p className="text-lg font-medium">No videos found</p>
+          <p className="text-sm mt-1">
+            No videos in{" "}
+            <span className="font-semibold">"{activeCategory}"</span> category
+            yet.
+          </p>
+        </div>
+      )}
+
+      {/* ── Videos ───────────────────────────────────────────── */}
+      {!loading && !error && videoList.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videoList.map((item) => (
+            <VideoCard key={item._id} video={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
