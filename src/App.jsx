@@ -4,6 +4,7 @@ import Sidebar from "./components/SideSlider/Sidebar";
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import useIsMobile from "./hooks/useIsMobile";
+import ToastContainer from "./components/ToastContainer";
 
 const App = () => {
   const isMobile = useIsMobile();
@@ -26,6 +27,7 @@ const App = () => {
       }}
       className="w-screen h-screen overflow-x-hidden"
     >
+      <ToastContainer />
       <Header setSidebarOpen={setSidebarOpen} />
       <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
       <Outlet context={{ sidebarOpen }} />

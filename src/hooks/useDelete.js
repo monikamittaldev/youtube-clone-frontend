@@ -4,12 +4,12 @@ import toast from "react-hot-toast";
 const useDelete = (token) => {
   const [loading, setLoading] = useState(false);
 
-  const deleteVideo = async (videoId) => {
+  const deleteVideo = async (url) => {
     setLoading(true);
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/videos/${videoId}`,
+        url,
         {
           method: "DELETE",
           headers: {

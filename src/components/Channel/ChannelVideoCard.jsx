@@ -120,7 +120,7 @@ const ChannelVideoCard = ({ video, isOwner, onDeleteClick, onEditClick }) => {
         {/* Edit / Delete — owner only */}
         {isOwner && <div className="flex gap-2 px-2"></div>}
         {/* 3 Dots — always visible */}
-        <div className="absolute right-0 top-0 hover:bg-amber-200">
+        <div className="absolute right-0 top-0 rounded-2xl hover:bg-[#1645a44d]">
           <button
             ref={menuBtnRef}
             className="p-1 rounded-full hover:bg-hover transition-colors"

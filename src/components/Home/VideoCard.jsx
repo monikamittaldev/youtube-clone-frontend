@@ -106,10 +106,10 @@ const VideoCard = ({ video }) => {
   };
 
   return (
-    <Link to={`/watch/${video._id}`}>
-      <div className="cursor-pointer group relative rounded-xl p-2 hover:bg-stone-100 dark:hover:bg-[#191c2fb5] transition-colors duration-200">
-        {/* Thumbnail */}
-        <div className="relative overflow-hidden rounded-xl">
+    <div className="cursor-pointer group relative rounded-xl p-2 hover:bg-stone-100 dark:hover:bg-[#191c2fb5] transition-colors duration-200">
+      {/* Thumbnail */}
+      <Link to={`/watch/${video._id}`}>
+        <div className="relative overflow-hidden rounded-xl shadow``````d">
           <img
             src={
               video.thumbnailUrl ||
@@ -126,23 +126,25 @@ const VideoCard = ({ video }) => {
             {duration}
           </span>
         </div>
+      </Link>
 
-        {/* Details */}
-        <div className="flex gap-3 mt-3 pr-6 relative">
-          {/* Channel Avatar */}
-          {channelAvatar ? (
-            <img
-              src={channelAvatar}
-              alt={channelName}
-              className="w-9 h-9 rounded-full object-cover flex-shrink-0"
-            />
-          ) : (
-            <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0 text-white font-bold text-sm">
-              {channelName?.[0]?.toUpperCase()}
-            </div>
-          )}
+      {/* Details */}
+      <div className="flex gap-3 mt-3 pr-6 relative">
+        {/* Channel Avatar */}
+        {channelAvatar ? (
+          <img
+            src={channelAvatar}
+            alt={channelName}
+            className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0 text-white font-bold text-sm">
+            {channelName?.[0]?.toUpperCase()}
+          </div>
+        )}
 
-          {/* Video Info */}
+        {/* Video Info */}
+        <Link to={`/watch/${video._id}`}>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-medium text-primary line-clamp-2 leading-snug">
               {video.title}
@@ -152,45 +154,43 @@ const VideoCard = ({ video }) => {
               {formatViews(video.views)} views • {timeAgo(video.createdAt)}
             </p>
           </div>
+        </Link>
+        {/* 3 Dots — always visible */}
+        <div className="absolute right-0 top-0 rounded-2xl hover:bg-[#1645a44d]   ">
+          <button
+            ref={menuBtnRef}
+            className="p-1 rounded-full hover:bg-hover transition-colors"
+            onClick={handleMenuToggle}
+          >
+            <BsThreeDotsVertical className="text-primary text-base" />
+          </button>
 
-          
-          {/* 3 Dots — always visible */}
-          <div className="absolute right-0 top-0">
-            <button
-              ref={menuBtnRef}
-              className="p-1 rounded-full hover:bg-hover transition-colors"
-              onClick={handleMenuToggle}
-            >
-              <BsThreeDotsVertical className="text-primary text-base" />
-            </button>
-
-            {/* Dropdown Menu */}
-            {showMenu && (
-              <div
-                ref={menuRef}
-                className={`absolute right-0 z-50 w-56 rounded-xl shadow-2xl py-2  bg-[#ffffff] dark:bg-[#272727]
+          {/* Dropdown Menu */}
+          {showMenu && (
+            <div
+              ref={menuRef}
+              className={`absolute right-0 z-50 w-56 rounded-xl shadow-2xl py-2  bg-[#ffffff] dark:bg-[#272727]
                 ${menuPosition === "top" ? "bottom-8" : "top-8"}
               `}
-              >
-                {menuOptions.map((opt) => (
-                  <button
-                    key={opt.label}
-                    className="flex items-center gap-3 px-4 py-2.5 w-full text-left text-sm text-primary hover:bg-stone-100 dark:hover:bg-[#3f3f3f] transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowMenu(false);
-                    }}
-                  >
-                    {opt.icon}
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+            >
+              {menuOptions.map((opt) => (
+                <button
+                  key={opt.label}
+                  className="flex items-center gap-3 px-4 py-2.5 w-full text-left text-sm text-primary hover:bg-stone-100 dark:hover:bg-[#3f3f3f] transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowMenu(false);
+                  }}
+                >
+                  {opt.icon}
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

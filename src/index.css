@@ -143,3 +143,8 @@ input,
 svg {
   transition: all 0.2s ease;
 }
+
+@keyframes shrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}

@@ -13,6 +13,8 @@ import ChannelVideoGrid from "../components/Channel/ChannelVideoGrid";
 import VideoFormModal from "../components/Channel/VideoFormModal";
 import useDelete from "../hooks/useDelete";
 import ConfirmDialog from "../components/ConfirmDialog";
+import { useToast } from "../components/ToastContainer";
+
 const ChannelPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ const ChannelPage = () => {
 
   const token = localStorage.getItem("yt_token");
   const user = JSON.parse(localStorage.getItem("yt_user") || "null");
-
+  const { showToast } = useToast();
   const [videos, setVideos] = useState([]);
   const [editingVideo, setEditingVideo] = useState(null);
   const [showVideoModal, setShowVideoModal] = useState(
@@ -70,12 +72,15 @@ const ChannelPage = () => {
   };
 
   const handleConfirmDelete = async () => {
-    const success = await deleteVideo(selectedVideoId);
+    const success = await deleteVideo(
+      `http://localhost:5000/api/videos/${selectedVideoId}`,
+    );
 
     if (success) {
       setVideos((prev) =>
         prev.filter((video) => video._id !== selectedVideoId),
       );
+       showToast("Video deleted successfully");
     }
 
     setShowDeleteDialog(false);
@@ -86,24 +91,6 @@ const ChannelPage = () => {
     setShowDeleteDialog(false);
     setSelectedVideoId(null);
   };
-  // const handleDeleteVideo = async (videoId) => {
-  //   if (!window.confirm("Are you sure you want to delete this video?")) return;
-  //   try {
-  //     const res = await fetch(`http://localhost:5000/api/videos/${videoId}`, {
-  //       method: "DELETE",
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     const data = await res.json();
-  //     if (data.success) {
-  //       setVideos((prev) => prev.filter((v) => v._id !== videoId));
-  //       toast.success("Video deleted!");
-  //     } else {
-  //       toast.error(data.message || "Failed to delete");
-  //     }
-  //   } catch {
-  //     toast.error("Something went wrong");
-  //   }
-  // };
 
   // ── Open edit modal ───────────────────────
   const handleEditClick = (video) => {
