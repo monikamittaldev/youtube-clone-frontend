@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SiYoutube } from "react-icons/si";
 import { FaCamera } from "react-icons/fa";
 import usePost from "../hooks/usePost";
-import { useToast } from "../components/ToastContainer";
+import ToastContainer, { useToast } from "../components/ToastContainer";
 
 const AuthPage = () => {
   const [mode, setMode] = useState("login");
@@ -22,10 +22,10 @@ const AuthPage = () => {
 
   // ── Custom hooks ──────────────────────────
   const { postData: loginPost, loading: loginLoading } = usePost(
-    "http://localhost:5000/api/auth/login"
+    "http://localhost:5000/api/auth/login",
   );
   const { postData: registerPost, loading: registerLoading } = usePost(
-    "http://localhost:5000/api/auth/register"
+    "http://localhost:5000/api/auth/register",
   );
 
   // ── Check token on mount ──────────────────
@@ -72,18 +72,21 @@ const AuthPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const errs = validateLogin();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) {
+      setErrors(errs);
+      return;
+    }
     setErrors({});
     try {
       const res = await loginPost(loginData);
       if (res.success) {
         localStorage.setItem("yt_token", res.token);
         localStorage.setItem("yt_user", JSON.stringify(res.user));
-       showToast("Welcome Back!", "success");
+        showToast("Welcome Back!", "success");
         navigate("/");
       }
     } catch (err) {
-    showToast(err.message || "Failed to access account", "error");
+      showToast(err.message || "Failed to access account", "error");
     }
   };
 
@@ -91,24 +94,32 @@ const AuthPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     const errs = validateRegister();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) {
+      setErrors(errs);
+      return;
+    }
     setErrors({});
     try {
       const res = await registerPost({
         username: registerData.username,
         email: registerData.email,
         password: registerData.password,
-        avatar: registerData.avatar
+        avatar: registerData.avatar,
       });
       if (res.success) {
-       showToast("Account created! Please sign in.","success");
+        showToast("Account created! Please sign in.", "success");
         setMode("login");
         setLoginData({ email: registerData.email, password: "" });
-        setRegisterData({ username: "", email: "", password: "", avatar: null });
+        setRegisterData({
+          username: "",
+          email: "",
+          password: "",
+          avatar: null,
+        });
         setAvatarPreview(null);
       }
     } catch (err) {
-    showToast(err.message || "Failed to delete video", "error");
+      showToast(err.message || "Failed to delete video", "error");
     }
   };
 
@@ -124,9 +135,10 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-[#f0f4f9] dark:bg-[#1e1e1f]">
+      <ToastContainer />
+
       <div className="w-full max-w-4xl bg-white dark:bg-[#282828] rounded-[28px] px-8 py-10 shadow-sm">
         <div className="flex flex-col md:flex-row gap-12">
-
           {/* ── LEFT ── */}
           <div className="md:w-2/5">
             <div className="flex items-center gap-2 mb-8">
@@ -139,13 +151,14 @@ const AuthPage = () => {
               {mode === "login" ? "Sign in" : "Create account"}
             </h1>
             <p className="text-[#5f6368] dark:text-gray-400 text-base">
-              {mode === "login" ? "to continue to YouTube" : "Join YouTube today"}
+              {mode === "login"
+                ? "to continue to YouTube"
+                : "Join YouTube today"}
             </p>
           </div>
 
           {/* ── RIGHT ── */}
           <div className="md:w-3/5">
-
             {/* ── LOGIN FORM ── */}
             {mode === "login" && (
               <form onSubmit={handleLogin} className="space-y-4" noValidate>
@@ -177,7 +190,9 @@ const AuthPage = () => {
                     className={inputClass("password")}
                   />
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
                   )}
                 </div>
 
@@ -195,7 +210,10 @@ const AuthPage = () => {
                   </span>
                   <button
                     type="button"
-                    onClick={() => { setMode("register"); setErrors({}); }}
+                    onClick={() => {
+                      setMode("register");
+                      setErrors({});
+                    }}
                     className="ml-2 text-[#1a73e8] font-medium hover:underline"
                   >
                     Create account
@@ -207,13 +225,16 @@ const AuthPage = () => {
             {/* ── REGISTER FORM ── */}
             {mode === "register" && (
               <form onSubmit={handleRegister} className="space-y-4" noValidate>
-
                 {/* Avatar Upload */}
                 <div className="flex justify-center mb-4">
                   <label className="relative cursor-pointer">
                     <div className="w-24 h-24 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#3a3a3a] flex items-center justify-center">
                       {avatarPreview ? (
-                        <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                        <img
+                          src={avatarPreview}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         <span className="text-sm text-gray-500">Upload</span>
                       )}
@@ -237,12 +258,17 @@ const AuthPage = () => {
                     placeholder="Username"
                     value={registerData.username}
                     onChange={(e) =>
-                      setRegisterData((p) => ({ ...p, username: e.target.value }))
+                      setRegisterData((p) => ({
+                        ...p,
+                        username: e.target.value,
+                      }))
                     }
                     className={inputClass("username")}
                   />
                   {errors.username && (
-                    <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.username}
+                    </p>
                   )}
                 </div>
 
@@ -269,12 +295,17 @@ const AuthPage = () => {
                     placeholder="Password"
                     value={registerData.password}
                     onChange={(e) =>
-                      setRegisterData((p) => ({ ...p, password: e.target.value }))
+                      setRegisterData((p) => ({
+                        ...p,
+                        password: e.target.value,
+                      }))
                     }
                     className={inputClass("password")}
                   />
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </p>
                   )}
                 </div>
 
@@ -292,7 +323,10 @@ const AuthPage = () => {
                   </span>
                   <button
                     type="button"
-                    onClick={() => { setMode("login"); setErrors({}); }}
+                    onClick={() => {
+                      setMode("login");
+                      setErrors({});
+                    }}
                     className="ml-2 text-[#1a73e8] font-medium hover:underline"
                   >
                     Sign In
@@ -300,7 +334,6 @@ const AuthPage = () => {
                 </div>
               </form>
             )}
-
           </div>
         </div>
       </div>

@@ -71,31 +71,31 @@ const CreateChannelPage = () => {
   const inputClass = (field) => `
     w-full h-12 px-4 rounded-xl border
     ${errors[field] ? "border-red-500" : "border-[#3f3f3f]"}
-    bg-[#121212] text-white outline-none
-    focus:border-[#3ea6ff] transition-colors text-sm
+    bg-white dark:bg-[#121212] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 outline-none
+    focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors text-sm
   `;
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-lg bg-[#282828] rounded-2xl p-8 shadow-xl">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] transition-colors duration-300 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-lg bg-white dark:bg-[#282828] rounded-2xl p-8 shadow-xl">
 
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
           <SiYoutube className="text-red-600 text-3xl" />
-          <span className="text-white text-xl font-medium">YouTube</span>
+          <span className="text-gray-900 dark:text-white text-xl font-medium">YouTube</span>
         </div>
 
-        <h1 className="text-white text-2xl font-normal mb-1">
+        <h1 className="text-gray-900 dark:text-white text-2xl font-normal mb-1">
           How you'll appear
         </h1>
-        <p className="text-[#aaaaaa] text-sm mb-6">
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
           Set up your channel to start uploading
         </p>
 
         {/* Avatar Upload */}
         <div className="flex justify-center mb-6">
           <label className="relative cursor-pointer group">
-            <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#3f3f3f] bg-[#3f3f3f] flex items-center justify-center">
+            <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 dark:border-[#3f3f3f] bg-gray-100 dark:bg-[#3f3f3f] flex items-center justify-center">
               {avatarPreview ? (
                 <img
                   src={avatarPreview}
@@ -103,13 +103,13 @@ const CreateChannelPage = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-[#aaaaaa] text-xs text-center px-2">
+                <span className="text-gray-500 dark:text-gray-400 text-xs text-center px-2">
                   Upload photo
                 </span>
               )}
             </div>
-            <div className="absolute bottom-0 right-0 bg-[#3ea6ff] p-2 rounded-full group-hover:bg-[#5bb8ff] transition-colors">
-              <FaCamera className="text-black text-xs" />
+            <div className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full group-hover:bg-blue-500 transition-colors">
+              <FaCamera className="text-white text-xs" />
             </div>
             <input
               type="file"
@@ -144,7 +144,7 @@ const CreateChannelPage = () => {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-[#3f3f3f] bg-[#121212] text-white outline-none focus:border-[#3ea6ff] transition-colors text-sm resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-[#3f3f3f] bg-white dark:bg-[#121212] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors text-sm resize-none"
             />
           </div>
 
@@ -164,14 +164,14 @@ const CreateChannelPage = () => {
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="px-6 py-2 rounded-full text-sm text-[#aaaaaa] hover:bg-[#3f3f3f] transition-colors"
+              className="px-6 py-2 rounded-full text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#3f3f3f] transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 rounded-full text-sm font-medium bg-[#3ea6ff] text-black hover:bg-[#5bb8ff] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-6 py-2 rounded-full text-sm font-medium bg-blue-600 text-white hover:bg-blue-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Creating..." : "Create channel"}
             </button>
@@ -183,4 +183,4 @@ const CreateChannelPage = () => {
   );
 };
 
-export default CreateChannelPage;
+export default CreateChannelPage; 
