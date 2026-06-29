@@ -7,12 +7,13 @@ import { useToast } from "../components/ToastContainer";
 
 const CreateChannelPage = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     channelName: "",
     description: "",
-    channelAvatar: "",
     channelBanner: "",
   });
+  const [channelAvatarFile, setChannelAvatarFile] = useState(null); // ← new
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [errors, setErrors] = useState({});
   const { showToast } = useToast();
@@ -34,6 +35,7 @@ const CreateChannelPage = () => {
   const handleAvatarPreview = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setChannelAvatarFile(file); // ← store the File
     setAvatarPreview(URL.createObjectURL(file));
   };
 
@@ -49,18 +51,24 @@ const CreateChannelPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) {
+      setErrors(errs);
+      return;
+    }
 
     try {
-      const res = await postData(formData, token);
+      // Merge file into payload — usePost will auto-detect and send FormData
+      const payload = { ...formData };
+      if (channelAvatarFile) payload.channelAvatar = channelAvatarFile;
+
+      const res = await postData(payload, token);
       if (res.success) {
-        // Update user in localStorage with new channel id
         const user = JSON.parse(localStorage.getItem("yt_user") || "null");
         if (user) {
           user.channel = res.channel._id;
           localStorage.setItem("yt_user", JSON.stringify(user));
         }
-        showToast("Channel created successfully!","success");
+        showToast("Channel created successfully!", "success");
         navigate(`/channel/${res.channel._id}`);
       }
     } catch (err) {
@@ -78,11 +86,12 @@ const CreateChannelPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] transition-colors duration-300 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-lg bg-white dark:bg-[#282828] rounded-2xl p-8 shadow-xl">
-
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
           <SiYoutube className="text-red-600 text-3xl" />
-          <span className="text-gray-900 dark:text-white text-xl font-medium">YouTube</span>
+          <span className="text-gray-900 dark:text-white text-xl font-medium">
+            YouTube
+          </span>
         </div>
 
         <h1 className="text-gray-900 dark:text-white text-2xl font-normal mb-1">
@@ -122,7 +131,6 @@ const CreateChannelPage = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <div>
             <input
               type="text"
@@ -176,11 +184,10 @@ const CreateChannelPage = () => {
               {loading ? "Creating..." : "Create channel"}
             </button>
           </div>
-
         </form>
       </div>
     </div>
   );
 };
 
-export default CreateChannelPage; 
+export default CreateChannelPage;

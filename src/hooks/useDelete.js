@@ -1,20 +1,19 @@
 import { useState } from "react";
+import axios from "axios";
 
 const useDelete = () => {
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState(null);
+  const [error, setError] = useState(null);
 
   const deleteData = async (url, token = null) => {
     setLoading(true);
     setError(null);
     try {
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch(url, { method: "DELETE", headers });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || "Failed to delete");
-      return data;
+      const res = await axios.delete(url, { headers });
+      return res.data;
     } catch (err) {
-      const message = err.message || "Something went wrong";
+      const message = err.response?.data?.message || "Something went wrong";
       setError(message);
       throw new Error(message);
     } finally {

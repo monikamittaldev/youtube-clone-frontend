@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import {
-  AiOutlineLike, AiFillLike,
-  AiOutlineDislike, AiFillDislike,
+  AiOutlineLike,
+  AiFillLike,
+  AiOutlineDislike,
+  AiFillDislike,
 } from "react-icons/ai";
 import { PiShareFatLight } from "react-icons/pi";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
@@ -35,27 +37,29 @@ const timeAgo = (dateStr) => {
 const VideoWatchPage = () => {
   const { id } = useParams();
   const token = localStorage.getItem("yt_token");
-  const user  = JSON.parse(localStorage.getItem("yt_user") || "null");
+  const user = JSON.parse(localStorage.getItem("yt_user") || "null");
   const { showToast } = useToast();
 
   const [showFullDesc, setShowFullDesc] = useState(false);
-  const [liked,        setLiked]        = useState(false);
-  const [disliked,     setDisliked]     = useState(false);
-  const [likeCount,    setLikeCount]    = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   // ── Fetch video ────────────────────────────────────────────
   const { data, loading, error } = useFetch(`${BASE}/${id}`);
   const video = data?.data;
 
   // ── Like / Dislike hooks ───────────────────────────────────
-  const { postData: likePost,    loading: likeLoading    } = usePost(`${BASE}/${id}/like`);
-  const { postData: dislikePost, loading: dislikeLoading } = usePost(`${BASE}/${id}/dislike`);
+  const { postData: likePost, loading: likeLoading } = usePost(
+    `${BASE}/${id}/like`,
+  );
+  const { postData: dislikePost, loading: dislikeLoading } = usePost(
+    `${BASE}/${id}/dislike`,
+  );
 
   // ── Sync initial like state from video data ────────────────
   useEffect(() => {
     if (video?._id) {
-      console.log("check Likes: ",video," ueser : ",user);
-      
       setLikeCount(video.likes?.length || 0);
       if (user) {
         setLiked(video.likes?.includes(user.id));
@@ -66,7 +70,10 @@ const VideoWatchPage = () => {
 
   // ── Like handler ───────────────────────────────────────────
   const handleLike = async () => {
-    if (!token) { showToast("Please sign in to like videos", "error"); return; }
+    if (!token) {
+      showToast("Please sign in to like videos", "error");
+      return;
+    }
     if (likeLoading) return;
     try {
       const data = await likePost({}, token);
@@ -84,7 +91,10 @@ const VideoWatchPage = () => {
 
   // ── Dislike handler ────────────────────────────────────────
   const handleDislike = async () => {
-    if (!token) { showToast("Please sign in", "error"); return; }
+    if (!token) {
+      showToast("Please sign in", "error");
+      return;
+    }
     if (dislikeLoading) return;
     try {
       const data = await dislikePost({}, token);
@@ -112,17 +122,17 @@ const VideoWatchPage = () => {
     );
   }
 
+  console.log("video url : "+video.videoUrl);
+
   return (
     <div className="pt-16 min-h-screen bg-primary">
       <div className="max-w-[1800px] mx-auto px-4 py-4 flex flex-col lg:flex-row gap-6">
-
         {/* ── Left — Player + Info ────────────────────────── */}
         <div className="flex-1 min-w-0">
-
           {/* Video Player */}
           <div className="w-full rounded-xl overflow-hidden bg-black aspect-video">
             <ReactPlayer
-              url={video.videoUrl}
+              src={video.videoUrl}
               controls
               width="100%"
               height="100%"
@@ -137,7 +147,6 @@ const VideoWatchPage = () => {
 
           {/* Channel + Actions Row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-3">
-
             {/* Channel Info */}
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold flex-shrink-0">
@@ -159,7 +168,6 @@ const VideoWatchPage = () => {
 
             {/* Like / Dislike / Share / Save */}
             <div className="flex items-center gap-2">
-
               {/* Like + Dislike group */}
               <div className="flex items-center bg-secondary rounded-full overflow-hidden">
                 <button
@@ -167,10 +175,11 @@ const VideoWatchPage = () => {
                   disabled={likeLoading}
                   className="flex items-center gap-2 px-4 py-2 hover:bg-hover transition-colors border-r border-[#3f3f3f] disabled:opacity-60"
                 >
-                  {liked
-                    ? <AiFillLike    className="text-xl text-primary" />
-                    : <AiOutlineLike className="text-xl text-primary" />
-                  }
+                  {liked ? (
+                    <AiFillLike className="text-xl text-primary" />
+                  ) : (
+                    <AiOutlineLike className="text-xl text-primary" />
+                  )}
                   <span className="text-sm text-primary">{likeCount}</span>
                 </button>
                 <button
@@ -178,10 +187,11 @@ const VideoWatchPage = () => {
                   disabled={dislikeLoading}
                   className="flex items-center px-4 py-2 hover:bg-hover transition-colors disabled:opacity-60"
                 >
-                  {disliked
-                    ? <AiFillDislike    className="text-xl text-primary" />
-                    : <AiOutlineDislike className="text-xl text-primary" />
-                  }
+                  {disliked ? (
+                    <AiFillDislike className="text-xl text-primary" />
+                  ) : (
+                    <AiOutlineDislike className="text-xl text-primary" />
+                  )}
                 </button>
               </div>
 
@@ -194,7 +204,9 @@ const VideoWatchPage = () => {
               {/* Save */}
               <button className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-full hover:bg-hover transition-colors">
                 <MdOutlinePlaylistAdd className="text-xl text-primary" />
-                <span className="text-sm text-primary hidden sm:block">Save</span>
+                <span className="text-sm text-primary hidden sm:block">
+                  Save
+                </span>
               </button>
             </div>
           </div>
@@ -207,9 +219,11 @@ const VideoWatchPage = () => {
             <p className="text-sm text-primary font-medium mb-1">
               {formatViews(video.views)} views • {timeAgo(video.createdAt)}
             </p>
-            <p className={`text-sm text-secondary whitespace-pre-wrap leading-relaxed ${
-              showFullDesc ? "" : "line-clamp-2"
-            }`}>
+            <p
+              className={`text-sm text-secondary whitespace-pre-wrap leading-relaxed ${
+                showFullDesc ? "" : "line-clamp-2"
+              }`}
+            >
               {video.description || "No description available."}
             </p>
             <button className="text-sm font-semibold text-primary mt-2">

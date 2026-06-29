@@ -10,11 +10,22 @@ const usePost = (url) => {
     setLoading(true);
     setError(null);
     try {
-      const headers = token
-        ? { Authorization: `Bearer ${token}` }
-        : {};
+      // Check if any value in body is a File → use FormData
+      const hasFile = Object.values(body).some((v) => v instanceof File);
+      let payload = body;
+      let headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      const res = await axios.post(url, body, { headers });
+      if (hasFile) {
+        payload = new FormData();
+        Object.entries(body).forEach(([key, value]) => {
+          if (value !== null && value !== undefined) {
+            payload.append(key, value);
+          }
+        });
+        // Don't set Content-Type — axios sets it automatically with boundary
+      }
+
+      const res = await axios.post(url, payload, { headers });
       setData(res.data);
       return res.data;
     } catch (err) {
