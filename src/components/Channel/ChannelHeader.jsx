@@ -4,6 +4,7 @@ import ChannelDescriptionModal from "./ChannelDescriptionModal";
 
 const ChannelHeader = ({ channel, videosCount, isOwner, onUploadClick }) => {
   const [showDescModal, setShowDescModal] = useState(false);
+
   return (
     <>
       {/* Banner */}

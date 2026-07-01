@@ -7,13 +7,16 @@ import {
   MdOutlineStream,
   MdOutlineSchool,
   MdOutlineManageAccounts,
+  MdOutlineAddBox,
+  MdHistory,
+  MdOutlinePlaylistPlay,
+  MdOutlineWatchLater,
+  MdOutlineDownload,
 } from "react-icons/md";
 import { IoMusicalNotesOutline } from "react-icons/io5";
 import { RiShoppingBag4Line } from "react-icons/ri";
 import { PiGameController } from "react-icons/pi";
-import { GiClothes } from "react-icons/gi";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdOutlineAddBox } from "react-icons/md";
 import SignInBtn from "../Header/SignInBtn";
 import { useLocation, useNavigate } from "react-router-dom";
 import useIsMobile from "../../hooks/useIsMobile";
@@ -30,29 +33,31 @@ const navItems = [
 ];
 
 const exploreItems = [
-  { icon: <MdOutlineLocalFireDepartment className="text-2xl" />, label: "Trending" },
+  {
+    icon: <MdOutlineLocalFireDepartment className="text-2xl" />,
+    label: "Trending",
+  },
   { icon: <RiShoppingBag4Line className="text-2xl" />, label: "Shopping" },
   { icon: <IoMusicalNotesOutline className="text-2xl" />, label: "Music" },
   { icon: <MdOutlineMovie className="text-2xl" />, label: "Movies" },
-  { icon: <PiGameController className="text-2xl" />, label: "Gaming" },
-  { icon: <MdOutlinePodcasts className="text-2xl" />, label: "Podcasts" },
-  { icon: <MdOutlineStream className="text-2xl" />, label: "Live" },
-  { icon: <MdOutlineSchool className="text-2xl" />, label: "Courses" },
+  { icon: <PiGameController className="text-2xl" />, label: "Gaming" }
 ];
 
 const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const isHomePage = location.pathname === "/";
   const isChannelPage = location.pathname.startsWith("/channel");
   const isMobile = useIsMobile();
+
   const showOverlayMode = (!isHomePage && !isChannelPage) || isMobile;
 
-  // ── Get user from localStorage ────────────
+  // Logged in user
   const user = JSON.parse(localStorage.getItem("yt_user") || "null");
   const isLoggedIn = !!user;
 
-  // ── Collapsed sidebar (Home desktop only) ─
+  // Collapsed Sidebar
   if (!showOverlayMode && !sidebarOpen) {
     return (
       <aside className="fixed top-14 left-0 h-[calc(100vh-56px)] w-20 bg-primary py-2">
@@ -74,7 +79,7 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
 
   return (
     <>
-      {/* Overlay for mobile / non-home pages */}
+      {/* Overlay */}
       {showOverlayMode && sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40"
@@ -87,13 +92,16 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
           fixed top-14 left-0 h-[calc(100vh-56px)]
           bg-primary overflow-y-auto scrollbar-hide
           px-2 py-2 z-50 transition-all duration-300
-          ${showOverlayMode
-            ? `w-60 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`
-            : `${sidebarOpen ? "w-60" : "w-20"}`
+          ${
+            showOverlayMode
+              ? `w-60 ${
+                  sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                }`
+              : `${sidebarOpen ? "w-60" : "w-20"}`
           }
         `}
       >
-        {/* Nav Items */}
+        {/* Main Navigation */}
         <div className="flex flex-col gap-1">
           {navItems.map((item) => (
             <button
@@ -109,32 +117,14 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
 
         <hr className="border-[#3f3f3f] my-3" />
 
-        {/* ── Auth section ── */}
+        {/* You Section */}
         {isLoggedIn ? (
           <div className="flex flex-col gap-1">
+            <h2 className="text-sm font-semibold text-primary px-3 mb-1">
+              You
+            </h2>
 
-            {/* User info */}
-            <div className="flex items-center gap-3 px-3 py-2">
-              <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt={user.username}
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  user.username?.[0]?.toUpperCase()
-                )}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-primary truncate">
-                  {user.username}
-                </p>
-                <p className="text-xs text-secondary truncate">{user.email}</p>
-              </div>
-            </div>
-
-            {/* Your Channel */}
+            {/* Your Channel / Create Channel */}
             {user.channel ? (
               <button
                 onClick={() => {
@@ -147,7 +137,6 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
                 <span className="text-sm font-medium">Your Channel</span>
               </button>
             ) : (
-              // No channel yet — prompt to create
               <button
                 onClick={() => {
                   navigate("/channel/create");
@@ -159,13 +148,34 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
                 <span className="text-sm font-medium">Create Channel</span>
               </button>
             )}
+
+            {/* Static Items */}
+            <button className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left">
+              <MdHistory className="text-2xl" />
+              <span className="text-sm font-medium">History</span>
+            </button>
+
+            <button className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left">
+              <MdOutlinePlaylistPlay className="text-2xl" />
+              <span className="text-sm font-medium">Playlists</span>
+            </button>
+
+            <button className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left">
+              <MdOutlineWatchLater className="text-2xl" />
+              <span className="text-sm font-medium">Watch Later</span>
+            </button>
+
+            <button className="flex items-center gap-5 px-3 py-2 rounded-xl hover:bg-hover text-primary w-full text-left">
+              <MdOutlineDownload className="text-2xl" />
+              <span className="text-sm font-medium">Downloads</span>
+            </button>
           </div>
         ) : (
-          // Not logged in — Sign In box
           <div className="px-3 py-3 flex flex-col gap-3">
             <p className="text-sm text-secondary leading-snug">
               Sign in to like videos, comment, and subscribe.
             </p>
+
             <div className="w-fit">
               <SignInBtn />
             </div>
@@ -179,6 +189,7 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
           <h2 className="text-sm font-semibold text-primary px-3 mb-1">
             Explore
           </h2>
+
           {exploreItems.map((item) => (
             <button
               key={item.label}
@@ -189,7 +200,6 @@ const Sidebar = ({ setSidebarOpen, sidebarOpen }) => {
             </button>
           ))}
         </div>
-
       </aside>
     </>
   );

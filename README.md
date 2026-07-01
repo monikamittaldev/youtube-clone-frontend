@@ -1,6 +1,14 @@
 # 🎬 YouTube Clone - Frontend
 
-A modern, responsive YouTube Clone frontend built with **React.js**, **Redux Toolkit**, **React Router**, and **Tailwind CSS**. The application replicates the core user experience of YouTube, including video browsing, playback, authentication, channel management, comments, likes, subscriptions, playlists, and a fully responsive UI with Dark/Light mode.
+A modern, responsive YouTube Clone frontend built with **React.js**, **React Router**, and **Tailwind CSS**. The application replicates the core user experience of YouTube, including video browsing, playback, authentication, channel management, comments, and likes/dislikes, with a fully responsive UI and Dark/Light mode.
+
+---
+
+## 🎥 Demo
+
+[![Watch the demo](./public/thumbnail.png)](https://youtu.be/KTzZs53c728)
+
+Click the thumbnail above to watch the full demo video on YouTube.
 
 ---
 
@@ -16,7 +24,7 @@ A modern, responsive YouTube Clone frontend built with **React.js**, **Redux Too
 ### 🎥 Videos
 - Home Feed
 - Video Details Page
-- Video Player
+- Video Player (ReactPlayer)
 - Upload Videos
 - Edit Videos
 - Delete Videos
@@ -30,15 +38,12 @@ A modern, responsive YouTube Clone frontend built with **React.js**, **Redux Too
 - Edit Channel
 - Upload Avatar
 - Upload Banner
-- Channel Dashboard
-- Channel Videos
+- Channel Video Management (Add/Edit/Delete)
 
 ### 💬 Comments
 - Add Comments
 - Edit Comments
 - Delete Comments
-- Like Comments
-- Dislike Comments
 
 ### 🎨 UI/UX
 - Responsive Design
@@ -46,7 +51,6 @@ A modern, responsive YouTube Clone frontend built with **React.js**, **Redux Too
 - Light Mode
 - Toast Notifications
 - Skeleton Loading
-- Infinite Scrolling
 - Mobile Friendly
 - Modern Material-inspired Design
 
@@ -72,11 +76,19 @@ A modern, responsive YouTube Clone frontend built with **React.js**, **Redux Too
 ```
 src/
 │
-├── assets/
 ├── components/
-├── hooks/
-├── pages/
-├── utils/
+│   ├── Channel/       ← Channel header, video card, upload/edit modal
+│   ├── Header/        ← Top nav, search, sign-in button
+│   ├── Home/           ← Category pills, video card, skeleton loader
+│   ├── SideSlider/     ← Toggleable sidebar
+│   ├── watch/          ← Comments, related videos
+│   ├── Context/        ← Theme (Dark/Light) context
+│   ├── Toast.jsx
+│   ├── ToastContainer.jsx
+│   ├── ConfirmDialog.jsx
+│   └── PageLoader.jsx
+├── hooks/               ← useFetch, usePost, usePut, useDelete, useIsMobile
+├── pages/               ← HomePage, VideoWatchPage, AuthPage, ChannelPage, CreateChannelPage, NotFound
 ├── App.jsx
 ├── main.jsx
 └── index.css

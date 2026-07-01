@@ -122,8 +122,6 @@ const VideoWatchPage = () => {
     );
   }
 
-  console.log("video url : "+video.videoUrl);
-
   return (
     <div className="pt-16 min-h-screen bg-primary">
       <div className="max-w-[1800px] mx-auto px-4 py-4 flex flex-col lg:flex-row gap-6">
@@ -149,10 +147,19 @@ const VideoWatchPage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-3">
             {/* Channel Info */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold flex-shrink-0">
-                {video.channelId?.channelName?.[0]?.toUpperCase() ||
-                  video.uploaderName?.[0]?.toUpperCase()}
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-red-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+                {video.channelId?.channelAvatar ? (
+                  <img
+                    src={video.channelId.channelAvatar}
+                    alt={video.channelId.channelName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  video.channelId?.channelName?.[0]?.toUpperCase() ||
+                  video.uploaderName?.[0]?.toUpperCase()
+                )}
               </div>
+
               <div>
                 <p className="text-primary font-medium text-sm">
                   {video.channelId?.channelName || video.uploaderName}
@@ -161,11 +168,11 @@ const VideoWatchPage = () => {
                   {formatViews(video.views)} views
                 </p>
               </div>
-              <button className="ml-4 dark:text-stone-950 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-900 transition-colors bg-stone-950 dark:bg-white dark:hover:bg-stone-200">
+
+              <button className="ml-4 bg-stone-950 dark:bg-white text-white dark:text-stone-950 px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-900 dark:hover:bg-stone-200 transition-colors">
                 Subscribe
               </button>
             </div>
-
             {/* Like / Dislike / Share / Save */}
             <div className="flex items-center gap-2">
               {/* Like + Dislike group */}
